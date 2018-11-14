@@ -28,7 +28,7 @@ public class AdventureGame : MonoBehaviour
 
 
     private int passedStatesCount;
-    private int collectedWoolCount;
+    private int collectedWool;
     private double dehydrationCount;
     private bool wait, overrideTextComponent;
     private bool infoOn;
@@ -67,7 +67,7 @@ public class AdventureGame : MonoBehaviour
         textIntroComponent.text = actualState.GetStateStory();
         textComponentChoices.text = actualState.GetStateStoryMenue();
         passedStatesCount = 0;
-        collectedWoolCount = 0;
+        collectedWool = 0;
         dehydrationCount = 0;
         statesUntilRescue = 30;
         wait = false;
@@ -94,14 +94,14 @@ public class AdventureGame : MonoBehaviour
 
     private string GetWoolText()
     {
-        string txt = "Wool collected (kg): " + collectedWoolCount;
+        string txt = "Wool collected (kg): " + collectedWool;
         return txt;
     }
 
     private void ResetCounters()
     {
         passedStatesCount = 0;
-        collectedWoolCount = 0;
+        collectedWool = 0;
         dehydrationCount = 0;
     }
 
@@ -134,7 +134,7 @@ public class AdventureGame : MonoBehaviour
         if (nextState.name == "Info.Alarm")
         {
             ResetCounters();
-            Debug.Log("Counters Reseted + " + passedStatesCount + " " + collectedWoolCount + " " + dehydrationCount);
+            Debug.Log("Counters Reseted + " + passedStatesCount + " " + collectedWool + " " + dehydrationCount);
         }
 
         if (currentState.name != nextState.name)
@@ -191,18 +191,18 @@ public class AdventureGame : MonoBehaviour
         if ((currentState.name == "Collect.Info" || currentState.name == "Collect.Do") && nextState.name == "Collect.Do")
         {
             int nbrWool = RandomState.getrandom.Next(1, 3);
-            collectedWoolCount += nbrWool;
-            collectedWoolCount = Clamp(collectedWoolCount, 0, 5);
-            Debug.Log("Collected " + nbrWool + "kg wool: current wool count: " + collectedWoolCount);
+            collectedWool += nbrWool;
+            collectedWool = Clamp(collectedWool, 0, 5);
+            Debug.Log("Collected " + nbrWool + "kg wool: current wool count: " + collectedWool);
             return nextState;
         }
 
 
         if ((currentState.name == "Knit.Info" || nextState.name == "Knit.Do") && nextState.name == "Knit.Do")
         {
-            if (collectedWoolCount >= 2)
+            if (collectedWool >= 2)
             {
-                collectedWoolCount -= 2;
+                collectedWool -= 2;
                 dehydrationCount -= 1.5;
                 Debug.Log("Wool Knitted -2kg + 1L water for magda, current dehydration" + dehydrationCount);
 
@@ -226,10 +226,11 @@ public class AdventureGame : MonoBehaviour
         if (currentState.name == "Fight.Do" && (nextState.name == "Collect.Info" || nextState.name == "Fight.Do"))
         {
 
-            Debug.Log("wool before Fight in kg: " + collectedWoolCount);
-            collectedWoolCount += RandomState.getrandom.Next(0, 3);
-            collectedWoolCount = Clamp(collectedWoolCount, 0, 5);
-            Debug.Log("wool after Fight in kg: " + collectedWoolCount);
+            Debug.Log("wool before Fight in kg: " + collectedWool);
+            RandomState testRandom = new RandomState();
+            collectedWool += testRandom.getNext(0, 3);
+            collectedWool = Clamp(collectedWool, 0, 5);
+            Debug.Log("wool after Fight in kg: " + collectedWool);
 
         }
 
